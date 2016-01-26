@@ -1,0 +1,111 @@
+/**
+ * Finds a protein within a strand of DNA represented as a string of c,g,t,a letters.
+ * A protein is a part of the DNA strand marked by start and stop codons (DNA triples)
+ * that is a multiple of 3 letters long.
+ *
+ * @author Duke Software Team 
+ */
+import edu.duke.*;
+import java.io.*;
+
+public class TagFinder {
+	public String findProtein(String dna) {
+	    String dna_str = dna.toLowerCase();
+		int start = dna_str.indexOf("atg");
+		if (start == -1) {
+			return "";
+		}
+		int stop1 = dna_str.indexOf("tag", start+3);
+		int stop2 = dna_str.indexOf("tga", start+3);
+		int stop3 = dna_str.indexOf("taa", start+3);
+		if ((stop1 - start) % 3 == 0) {
+			return dna.substring(start, stop1+3)+"--stop codon:"+dna.substring(stop1, stop1+3);
+		}
+		else if ((stop2 - start) % 3 == 0) {
+			return dna.substring(start, stop2+3)+"--stop codon:"+dna.substring(stop2, stop2+3);
+		}
+		else if ((stop3 - start) % 3 == 0) {
+			return dna.substring(start, stop3+3)+"--stop codon:"+dna.substring(stop3, stop3+3);
+		} 
+		else {
+			return "";
+		}
+	}
+	
+	public String stopCodon(String dna) {
+	    String dna_str = dna.toLowerCase();
+		int start = dna_str.indexOf("atg");
+		if (start == -1) {
+			return "";
+		}
+		int stop1 = dna_str.indexOf("tag", start+3);
+		int stop2 = dna_str.indexOf("tga", start+3);
+		int stop3 = dna_str.indexOf("taa", start+3);
+		if ((stop1 - start) % 3 == 0) {
+			return dna.substring(stop1, stop1+3);
+		}
+		else if ((stop2 - start) % 3 == 0) {
+			return dna.substring(stop2, stop2+3);
+		}
+		else if ((stop3 - start) % 3 == 0) {
+			return dna.substring(stop3, stop3+3);
+		} 
+		else {
+			return "";
+		}
+	}
+	   
+	public void testing() {
+		String a = "cccatggggtttaaataataataggagagagagagagagttt";
+		String ap = "atggggtttaaataataatag";
+		//String a = "atgcctag";
+		//String ap = "";
+		//String a = "ATGCCCTAG";
+		//String ap = "ATGCCCTAG";
+		String result = findProtein(a);
+		if (ap.equals(result)) {
+			System.out.println("success for " + ap + " length " + ap.length());
+		}
+		else {
+			System.out.println("mistake for input: " + a);
+			System.out.println("got: " + result);
+			System.out.println("not: " + ap);
+		}
+	}
+}
+
+
+import edu.duke.*;
+
+public class URLFinder {
+	public StorageResource findURLs(String url) {
+		URLResource page = new URLResource(url);
+		String source = page.asString();
+		source = source.toLowerCase();
+		StorageResource store = new StorageResource();
+		int start = 0;
+		while (true) {
+			int index = source.indexOf("href=", start);
+			if (index == -1) {
+				break;
+			}
+			int firstQuote = index+6; // after href="
+			int endQuote = source.indexOf("\"", firstQuote);
+			int endQuote2 = source.indexOf("</a>", endQuote);
+			String sub = source.substring(firstQuote, endQuote);
+			String sub2 = source.substring(endQuote+3, endQuote2);
+			if (sub.indexOf("youtube.com") >= 0) {
+				store.add(sub+"***details***"+sub2);
+			}
+			start = endQuote2 + 1;
+		}
+		return store;
+	}
+
+	public void testURL() {
+		StorageResource s1 = findURLs("http://www.dukelearntoprogram.com/course2/data/manylinks.html");
+		for (String link : s1.data()) {
+			System.out.println(link);
+		}
+	}
+}
