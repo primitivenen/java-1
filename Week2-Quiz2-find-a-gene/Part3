@@ -1,0 +1,44 @@
+
+/**
+ * Write a description of Part3 here.
+ * 
+ * @author (your name) 
+ * @version (a version number or a date)
+ */
+public class Part3 {
+    public boolean twoOccurrences(String stringa, String stringb){
+        int num = 0;
+        int lenb=stringb.length();
+        int lena=stringa.length();
+        if(lena > lenb*0.5) 
+            return false;
+        int index = stringb.indexOf(stringa);
+        int pos = 0;              
+        if(index==-1)
+            return false;
+        else {
+            pos = index+lena;
+            index = stringb.indexOf(stringa, pos);  
+            if(index == -1)
+                return false;
+        }
+        return true;
+    }
+    public String lastPart(String stringa, String stringb){
+        int index = stringb.indexOf(stringa);
+        int lena = stringa.length();
+        int lenb = stringb.length();
+        if(index == -1){
+            return stringb;
+        }
+        else
+            return stringb.substring(index+lena);
+    }
+    public void testing(){
+        System.out.println("The answer is "+twoOccurrences("by", "A story by Abby Long"));
+        System.out.println("The answer is "+twoOccurrences("a", "banana"));
+        System.out.println("The answer is "+twoOccurrences("atg", "ctgtatgta"));
+        System.out.println("The part of the string after is" + lastPart("an","banana"));
+        System.out.println("The part of the string after is" + lastPart("zoo","forest"));
+    }
+}
