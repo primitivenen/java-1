@@ -1,0 +1,45 @@
+
+/**
+ * Write a description of Part1 here.
+ * 
+ * @author (your name) 
+ * @version (a version number or a date)
+ */
+public class Part1 {
+    public int findStopCodon(String dna, int startIndex, String stopCodon){
+        int currindex = dna.indexOf(dna, startIndex+3);
+        while(currindex != -1){
+            int diff = currindex - startIndex;
+            if(diff % 3 == 0)
+                return currindex;
+            else
+                currindex = dna.indexOf(stopCodon, currindex+3);
+        }
+        return dna.length();
+    }
+    public String findGene(String dna){
+        int len = dna.length();
+        int startIndex = dna.indexOf("ATG");
+        if(startIndex == -1) return "";
+        int taa = findStopCodon(dna, startIndex, "TAA");
+        int tag = findStopCodon(dna, startIndex, "TAG"); 
+        int tga = findStopCodon(dna, startIndex, "TGA"); 
+        int temp = Math.min(taa, tag);
+        int minIndex = Math.min(temp, tga);
+        if(minIndex == len) return "";
+        return dna.substring(startIndex, minIndex+3);
+    }
+    public void printAllGenes(String dna){
+
+        while(true){ 
+            String gene = findGene(dna);
+            int index = dna.indexOf(gene);
+            if(index ==-1){
+                break;
+            }
+            System.out.println("Find a gene: "+gene);
+            index = index+gene.length();
+            dna = dna.substring(index);
+        }    
+    }
+}
